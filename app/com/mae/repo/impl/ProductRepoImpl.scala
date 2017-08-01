@@ -33,14 +33,17 @@ class ProductRepoImpl @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
   override def findProductsByNameOrCode(name: Option[String], code: Option[String])
                                                         : Future[Seq[ProductsRow]] = db.run {
     product.filter { prod =>
-      name.map(prod.name like "%" + _).getOrElse(prod.name like "%") &&
-        code.map(prod.code like "%" + _).getOrElse(prod.code like "%")
+      name.map(prod.name like "%" + _ + "%").getOrElse(prod.name like "%") &&
+        code.map(prod.code like "%" + _ + "%").getOrElse(prod.code like "%")
     }.result
   }
 
-  override def findProductById(id: Int): Unit = ???
+  override def findProductById(id: Int): Future[Option[ProductsRow]] = db.run {
+    product.filter(_.id === id).result.headOption
+  }
 
-  override def findAllProducts: Vector[ProductsRow] = ???
-
-  override def updateProduct(id: Int, product: ProductsRow): Unit = ???
+  override def updateProduct(id: Int, row: ProductsRow): Future[Int] = db.run {
+    println(row)
+    product.insertOrUpdate(row)
+  }
 }

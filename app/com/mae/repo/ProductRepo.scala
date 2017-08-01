@@ -8,8 +8,6 @@ trait ProductRepo {
 
   def addNewProduct(row: ProductsRow): Future[Int]
   def findProductsByNameOrCode(name: Option[String], code: Option[String]): Future[Seq[ProductsRow]]
-
-  def findProductById(id: Int)
-  def findAllProducts: Vector[ProductsRow]
-  def updateProduct(id: Int, row: ProductsRow)
+  def findProductById(id: Int): Future[Option[ProductsRow]]
+  def updateProduct(id: Int, row: ProductsRow): Future[Int]
 }

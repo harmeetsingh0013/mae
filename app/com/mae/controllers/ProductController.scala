@@ -31,4 +31,23 @@ class ProductController @Inject()(productService: ProductService, cc: Controller
       case ex => InternalServerError(createJsonResponse(status = false, msg = "unable to insert new product", data = -1))
     }
   }
+
+  def findProduct(id: Int) = Action.async {
+    productService.findProductById(id).map {
+      case Some(product) => Ok(createJsonResponse(data = product))
+      case None => NotFound(createJsonResponse(status = false, msg = "product not found", data = -1))
+    }
+  }
+
+  def updateProduct(id: Int) = Action.async(parse.json) { implicit  request =>
+    request.body.validate[Product].asOpt match {
+      case Some(product) =>
+        productService.updateProduct(id, product).map { value =>
+          Ok(createJsonResponse(data = value))
+        }.recover {
+          case ex => InternalServerError(createJsonResponse(status = false, msg = "unable to update product", data = -1))
+        }
+      case None => Future.successful(BadRequest(createJsonResponse(status = false, msg = "Invalid json", data = -1)))
+    }
+  }
 }

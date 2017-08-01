@@ -24,22 +24,41 @@ class ProductServiceImpl @Inject()(productRepo: ProductRepo) extends ProductServ
 
   override def findProductsByNameOrCode(name: Option[String], code: Option[String]): Future[Vector[Product]] = {
     productRepo.findProductsByNameOrCode(name, code).map { rows =>
-      rows.map { row =>
-        Product(
-          id = Some(row.id),
-          name = row.name,
-          code = row.code,
-          date = Some(row.date),
-          quantity = row.quantity,
-          price = row.price.doubleValue()
-        )
-      }.toVector
+      rows.map(mapperProductsRowToProduct(_)).toVector
     }
   }
 
-  override def findProductById(id: Int): Unit = ???
+  override def findProductById(id: Int): Future[Option[Product]] = {
+    productRepo.findProductById(id).map {
+      case Some(row) => Some(mapperProductsRowToProduct(row))
+      case None => Option.empty
+    }
+  }
 
-  override def findAllProducts: Vector[Product] = ???
+  override def updateProduct(id: Int, product: Product): Future[Int] = {
+    productRepo.updateProduct(id, mapperProductToProductsRow(product))
+  }
 
-  override def updateProduct(id: Int, product: Product): Unit = ???
+  private def mapperProductsRowToProduct(row: ProductsRow) = {
+    Product(
+      id = Some(row.id),
+      name = row.name,
+      code = row.code,
+      date = Some(row.date),
+      quantity = row.quantity,
+      price = row.price.doubleValue()
+    )
+  }
+
+  private def mapperProductToProductsRow(product: Product) = {
+    ProductsRow (
+      id = product.id.get,
+      name = product.name,
+      code = product.code,
+      date = Utility.timestampGenerator,
+      quantity = product.quantity,
+      price = BigDecimal(product.price),
+      companyId = -1
+    )
+  }
 }

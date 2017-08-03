@@ -15,3 +15,6 @@ GET         /api/products               com.mae.controllers.ProductController.fi
 GET         /api/product/:id            com.mae.controllers.ProductController.findProduct(id: Int)
 PUT         /api/product/:id            com.mae.controllers.ProductController.updateProduct(id: Int)
 DELETE      /api/product/:id            com.mae.controllers.ProductController.deleteProduct(id: Int)
+
+#company routes
+POST        /api/company                com.mae.controllers.CompanyController.addNewCompany

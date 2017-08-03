@@ -12,7 +12,7 @@ case class Company (
                    updateDate: Option[Timestamp] = None,
                    code: String,
                    name: String,
-                   companyType: Option[String],
+                   `type`: Option[String],
                    gstNo: String,
                    address: String,
                    state: Option[String] = None,

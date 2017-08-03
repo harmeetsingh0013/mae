@@ -3,6 +3,7 @@ package com.mae.repo.impl
 import javax.inject.Inject
 
 import com.mae.repo.CompanyRepo
+import com.mae.repo.models.Tables
 import com.mae.repo.models.Tables.{Companies, CompaniesRow}
 import org.slf4j.{Logger, LoggerFactory}
 import play.api.db.slick.DatabaseConfigProvider
@@ -30,11 +31,28 @@ class CompanyRepoImpl @Inject() (dbConfigProvider: DatabaseConfigProvider)
           row.others, row.addDate, row.updateDate)
   }
 
-  override def findCompanyByNameCodeOrPincode(name: Option[String], code: Option[String], pincode: Option[String], offset: Int, limit: Int): Future[Vector[CompaniesRow]] = ???
+  override def findCompanyByNameCodeOrPincode(name: Option[String], code: Option[String], pincode: Option[String]
+                                              , offset: Int, limit: Int): Future[Seq[Tables.CompaniesRow]] = db.run {
+    logger.info("In findCompanyByNameCodeOrPincode repository method")
 
-  override def findCompanyById(id: Int): Future[Option[CompaniesRow]] = ???
+    company.filter { cmp =>
+      name.map(cmp.name like "%" + _ + "%").getOrElse(cmp.name like "%") &&
+        code.map(cmp.code like "%" + _ + "%").getOrElse(cmp.code like "%") &&
+          pincode.map(cmp.pincode like "%" + _  + "%").getOrElse(cmp.pincode like "%")
+    }.drop(offset).take(limit).result
+  }
 
-  override def updateCompanyDetail(id: Int, row: CompaniesRow): Future[Int] = ???
+  override def findCompanyById(id: Int): Future[Option[CompaniesRow]] = db.run {
+    logger.info("In findCompanyById repository method")
 
-  override def deleteCompany(id: Int): Future[Int] = ???
+    company.filter(_.id === id).result.headOption
+  }
+
+  override def updateCompanyDetail(id: Int, row: CompaniesRow): Future[Int] = db.run {
+    company.filter(_.id === id).update(row)
+  }
+
+  override def deleteCompany(id: Int): Future[Int] = db.run {
+    company.filter(_.id === id).delete
+  }
 }

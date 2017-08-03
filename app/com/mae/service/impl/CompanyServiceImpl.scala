@@ -26,13 +26,34 @@ class CompanyServiceImpl @Inject()(companyRepo: CompanyRepo)
     companyRepo.addNewCompany(mapperCompanyToComapniesRow(company))
   }
 
-  override def findCompanyByNameCodeOrPincode(name: Option[String], code: Option[String], pincode: Option[String], page: Int): Future[Vector[Company]] = ???
+  override def findCompanyByNameCodeOrPincode(name: Option[String], code: Option[String],
+                                              pincode: Option[String], page: Int): Future[Vector[Company]] = {
+    logger.info("In findCompanyByNameCodeOrPincode service method")
 
-  override def findCompanyById(id: Int): Future[Option[Company]] = ???
+    val offset = (page - 1) * LIMIT
+    companyRepo.findCompanyByNameCodeOrPincode(name, code, pincode, offset, LIMIT).map { rows =>
+      rows.map(mapperComapniesRowToCompany(_)).toVector
+    }
+  }
 
-  override def updateCompanyDetail(id: Int, company: Company): Future[Int] = ???
+  override def findCompanyById(id: Int): Future[Option[Company]] = {
+    logger.info("In findCompanyById service method")
 
-  override def deleteCompany(id: Int): Future[Int] = ???
+    companyRepo.findCompanyById(id).map(_.map(mapperComapniesRowToCompany(_)))
+  }
+
+  override def updateCompanyDetail(id: Int, company: Company): Future[Int] = {
+    logger.info("In updateCompanyDetail service method")
+
+    companyRepo.updateCompanyDetail(id,
+      mapperCompanyToComapniesRow(company.copy(updateDate = Some(Utility.timestampGenerator))))
+  }
+
+  override def deleteCompany(id: Int): Future[Int] = {
+    logger.info("In deleteCompany service method")
+
+     companyRepo.deleteCompany(id)
+  }
 
   private def mapperCompanyToComapniesRow(company: Company) = {
     CompaniesRow(
@@ -42,13 +63,31 @@ class CompanyServiceImpl @Inject()(companyRepo: CompanyRepo)
       addDate = company.addDate.getOrElse(Utility.timestampGenerator),
       updateDate = company.updateDate,
       code = company.code,
-      `type` = company.companyType.getOrElse("CUSTOMER"),
+      `type` = company.`type`.getOrElse("CUSTOMER"),
       gstNo = company.gstNo,
       address = company.address,
       state = company.state,
       city = company.city,
       pincode = company.pincode,
       others = company.others
+    )
+  }
+
+  private def mapperComapniesRowToCompany(row: CompaniesRow) = {
+    Company(
+      id = Some(row.id),
+      userId = Some(row.userId),
+      addDate = Some(row.addDate),
+      updateDate = row.updateDate,
+      code = row.code,
+      name = row.name,
+      `type` = Some(row.`type`),
+      gstNo = row.gstNo,
+      address = row.address,
+      state = row.state,
+      city = row.city,
+      pincode = row.pincode,
+      others = row.others
     )
   }
 }

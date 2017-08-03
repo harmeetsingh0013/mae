@@ -7,10 +7,11 @@ import play.api.libs.json._
 
 case class Company (
                    id: Option[Int],
+                   userId: Option[Int] = None,
                    date: Option[Timestamp] = None,
-                   user: Option[User] = None,
                    code: String,
                    name: String,
+                   companyType: Option[String],
                    gstNo: String,
                    address: String,
                    state: Option[String] = None,

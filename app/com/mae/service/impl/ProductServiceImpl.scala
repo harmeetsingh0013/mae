@@ -4,17 +4,23 @@ import javax.inject.{Inject, Singleton}
 
 import com.mae.models.Product
 import com.mae.repo.ProductRepo
-import scala.concurrent.ExecutionContext.Implicits.global
 import com.mae.repo.models.Tables.ProductsRow
 import com.mae.service.ProductService
 import com.mae.util.Utility
+import com.typesafe.config.ConfigFactory
+import org.slf4j.{Logger, LoggerFactory}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 @Singleton
-class ProductServiceImpl @Inject()(productRepo: ProductRepo) extends ProductService {
+class ProductServiceImpl @Inject()(productRepo: ProductRepo)
+                                  (implicit ec: ExecutionContext) extends ProductService {
+  val logger: Logger = LoggerFactory.getLogger(this.getClass())
+  private val LIMIT = Try(ConfigFactory.load().getInt("page.limit")).toOption.getOrElse(10);
 
   override def addNewProduct(product: Product): Future[Int] = {
+    logger.info("In addNewProduct service method")
 
     val row = ProductsRow(id = -1, name = product.name, code = product.code, date = Utility.timestampGenerator,
       quantity = product.quantity, price = BigDecimal(product.price), companyId = product.companyId.flatMap(_.id).getOrElse(1))
@@ -22,13 +28,18 @@ class ProductServiceImpl @Inject()(productRepo: ProductRepo) extends ProductServ
     productRepo.addNewProduct(row)
   }
 
-  override def findProductsByNameOrCode(name: Option[String], code: Option[String]): Future[Vector[Product]] = {
-    productRepo.findProductsByNameOrCode(name, code).map { rows =>
+  override def findProductsByNameOrCode(name: Option[String], code: Option[String], page: Int): Future[Vector[Product]] = {
+    logger.info("In findProductsByNameOrCode service method")
+
+    val offset = (page - 1) * LIMIT
+    productRepo.findProductsByNameOrCode(name, code, offset, LIMIT).map { rows =>
       rows.map(mapperProductsRowToProduct(_)).toVector
     }
   }
 
   override def findProductById(id: Int): Future[Option[Product]] = {
+    logger.info("In findProductById service method")
+
     productRepo.findProductById(id).map {
       case Some(row) => Some(mapperProductsRowToProduct(row))
       case None => Option.empty
@@ -36,7 +47,15 @@ class ProductServiceImpl @Inject()(productRepo: ProductRepo) extends ProductServ
   }
 
   override def updateProduct(id: Int, product: Product): Future[Int] = {
+    logger.info("In updateProduct service method")
+
     productRepo.updateProduct(id, mapperProductToProductsRow(product))
+  }
+
+  override def removeProductById(id: Int): Future[Int] = {
+    logger.info("In removeProductById service method")
+
+    productRepo.removeProductById(id)
   }
 
   private def mapperProductsRowToProduct(row: ProductsRow) = {
@@ -58,7 +77,7 @@ class ProductServiceImpl @Inject()(productRepo: ProductRepo) extends ProductServ
       date = Utility.timestampGenerator,
       quantity = product.quantity,
       price = BigDecimal(product.price),
-      companyId = -1
+      companyId = 1
     )
   }
 }

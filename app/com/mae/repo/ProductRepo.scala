@@ -7,7 +7,8 @@ import scala.concurrent.Future
 trait ProductRepo {
 
   def addNewProduct(row: ProductsRow): Future[Int]
-  def findProductsByNameOrCode(name: Option[String], code: Option[String]): Future[Seq[ProductsRow]]
+  def findProductsByNameOrCode(name: Option[String], code: Option[String], offset: Int, limit: Int): Future[Seq[ProductsRow]]
   def findProductById(id: Int): Future[Option[ProductsRow]]
   def updateProduct(id: Int, row: ProductsRow): Future[Int]
+  def removeProductById(id: Int): Future[Int]
 }

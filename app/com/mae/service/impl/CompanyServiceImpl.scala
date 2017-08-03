@@ -7,14 +7,22 @@ import com.mae.repo.CompanyRepo
 import com.mae.repo.models.Tables.CompaniesRow
 import com.mae.service.CompanyService
 import com.mae.util.Utility
+import com.typesafe.config.ConfigFactory
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 @Singleton
 class CompanyServiceImpl @Inject()(companyRepo: CompanyRepo)
                                   (implicit ec: ExecutionContext) extends CompanyService {
 
+  val logger: Logger = LoggerFactory.getLogger(this.getClass())
+  private val LIMIT = Try(ConfigFactory.load().getInt("page.limit")).toOption.getOrElse(10);
+
   override def addNewCompany(company: Company): Future[Int] = {
+    logger.info("In addNewCompany service method")
+
     companyRepo.addNewCompany(mapperCompanyToComapniesRow(company))
   }
 
@@ -31,15 +39,16 @@ class CompanyServiceImpl @Inject()(companyRepo: CompanyRepo)
       id = company.id.getOrElse(-1),
       name = company.name,
       userId = company.userId.getOrElse(1),
-      date = company.date.getOrElse(Utility.timestampGenerator),
+      addDate = company.addDate.getOrElse(Utility.timestampGenerator),
+      updateDate = company.updateDate,
       code = company.code,
-      companyType = company.companyType.getOrElse("CUSTOMER"),
+      `type` = company.companyType.getOrElse("CUSTOMER"),
       gstNo = company.gstNo,
-      address = Some(company.address),
+      address = company.address,
       state = company.state,
       city = company.city,
       pincode = company.pincode,
-      other = company.other
+      others = company.others
     )
   }
 }

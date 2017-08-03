@@ -11,8 +11,9 @@ case class Product (
                    name: String,
                    price: Double,
                    quantity: Int,
-                   date: Option[Timestamp] = None,
-                   companyId: Option[Company] = None
+                   addDate: Option[Timestamp] = None,
+                   updateDate: Option[Timestamp] = None,
+                   companyId: Option[Int] = None
                    )
 
 object Product {

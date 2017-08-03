@@ -22,10 +22,7 @@ class ProductServiceImpl @Inject()(productRepo: ProductRepo)
   override def addNewProduct(product: Product): Future[Int] = {
     logger.info("In addNewProduct service method")
 
-    val row = ProductsRow(id = -1, name = product.name, code = product.code, date = Utility.timestampGenerator,
-      quantity = product.quantity, price = BigDecimal(product.price), companyId = product.companyId.flatMap(_.id).getOrElse(1))
-
-    productRepo.addNewProduct(row)
+    productRepo.addNewProduct(mapperProductToProductsRow(product))
   }
 
   override def findProductsByNameOrCode(name: Option[String], code: Option[String], page: Int): Future[Vector[Product]] = {
@@ -49,7 +46,8 @@ class ProductServiceImpl @Inject()(productRepo: ProductRepo)
   override def updateProduct(id: Int, product: Product): Future[Int] = {
     logger.info("In updateProduct service method")
 
-    productRepo.updateProduct(id, mapperProductToProductsRow(product))
+    productRepo.updateProduct(id,
+      mapperProductToProductsRow(product.copy(updateDate = Some(Utility.timestampGenerator))))
   }
 
   override def removeProductById(id: Int): Future[Int] = {
@@ -63,7 +61,7 @@ class ProductServiceImpl @Inject()(productRepo: ProductRepo)
       id = Some(row.id),
       name = row.name,
       code = row.code,
-      date = Some(row.date),
+      addDate = Some(row.addDate),
       quantity = row.quantity,
       price = row.price.doubleValue()
     )
@@ -71,13 +69,14 @@ class ProductServiceImpl @Inject()(productRepo: ProductRepo)
 
   private def mapperProductToProductsRow(product: Product) = {
     ProductsRow (
-      id = product.id.get,
+      id = product.id.getOrElse(-1),
       name = product.name,
       code = product.code,
-      date = Utility.timestampGenerator,
+      addDate = product.addDate.getOrElse(Utility.timestampGenerator),
+      updateDate = product.updateDate,
       quantity = product.quantity,
       price = BigDecimal(product.price),
-      companyId = 1
+      companyId = product.companyId.getOrElse(1)
     )
   }
 }

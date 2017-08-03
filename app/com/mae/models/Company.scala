@@ -8,7 +8,8 @@ import play.api.libs.json._
 case class Company (
                    id: Option[Int],
                    userId: Option[Int] = None,
-                   date: Option[Timestamp] = None,
+                   addDate: Option[Timestamp] = None,
+                   updateDate: Option[Timestamp] = None,
                    code: String,
                    name: String,
                    companyType: Option[String],
@@ -17,7 +18,7 @@ case class Company (
                    state: Option[String] = None,
                    city: Option[String] = None,
                    pincode: String,
-                   other: Option[String] = None
+                   others: Option[String] = None
                    )
 
 object Company {

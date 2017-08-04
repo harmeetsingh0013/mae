@@ -18,3 +18,7 @@ DELETE      /api/product/:id            com.mae.controllers.ProductController.de
 
 #company routes
 POST        /api/company                com.mae.controllers.CompanyController.addNewCompany
+GET         /api/companies              com.mae.controllers.CompanyController.findCompanies(name: Option[String], code: Option[String], pincode: Option[String], page: Int ?= 1)
+GET         /api/company/:id            com.mae.controllers.CompanyController.findCompany(id: Int)
+PUT         /api/company/:id            com.mae.controllers.CompanyController.updateCompany(id: Int)
+DELETE      /api/company/:id            com.mae.controllers.CompanyController.deleteCompany(id: Int)

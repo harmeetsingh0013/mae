@@ -59,7 +59,6 @@ class CompanyServiceImpl @Inject()(companyRepo: CompanyRepo)
     CompaniesRow(
       id = company.id.getOrElse(-1),
       name = company.name,
-      userId = company.userId.getOrElse(1),
       addDate = company.addDate.getOrElse(Utility.timestampGenerator),
       updateDate = company.updateDate,
       code = company.code,
@@ -76,7 +75,6 @@ class CompanyServiceImpl @Inject()(companyRepo: CompanyRepo)
   private def mapperComapniesRowToCompany(row: CompaniesRow) = {
     Company(
       id = Some(row.id),
-      userId = Some(row.userId),
       addDate = Some(row.addDate),
       updateDate = row.updateDate,
       code = row.code,

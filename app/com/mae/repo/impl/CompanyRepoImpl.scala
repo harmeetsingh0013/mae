@@ -25,9 +25,9 @@ class CompanyRepoImpl @Inject() (dbConfigProvider: DatabaseConfigProvider)
   override def addNewCompany(row: CompaniesRow): Future[Int] = db.run{
     logger.info("In addNewCompany repository method")
 
-    company.map(cmp => (cmp.userId, cmp.code, cmp.name, cmp.`type`, cmp.gstNo, cmp.address, cmp.state, cmp.city,
+    company.map(cmp => (cmp.code, cmp.name, cmp.`type`, cmp.gstNo, cmp.address, cmp.state, cmp.city,
       cmp.pincode, cmp.others, cmp.addDate, cmp.updateDate))
-        .+=(row.userId, row.code, row.name, row.`type`, row.gstNo, row.address, row.state, row.city, row.pincode,
+        .+=(row.code, row.name, row.`type`, row.gstNo, row.address, row.state, row.city, row.pincode,
           row.others, row.addDate, row.updateDate)
   }
 

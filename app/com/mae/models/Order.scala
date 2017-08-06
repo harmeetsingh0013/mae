@@ -7,17 +7,21 @@ import play.api.libs.json._
 
 case class Order (
                  id: Option[Int] = None,
-                 company: Company,
+                 companyId: Int,
+                 invoiceNo: String,
+                 addDate: Option[Timestamp],
+                 updateDate: Option[Timestamp],
                  discount: Option[Double] = None,
+                 status: Option[String],
                  sGst: Double,
                  cGst: Double,
-                 date: Option[Timestamp] = None,
                  items: Vector[OrderItems]
                  )
 
 case class OrderItems(
                      id: Option[Int],
-                     item: Product,
+                     productId: Int,
+                     productName: String,
                      quantity: Int,
                      price: Double,
                      )

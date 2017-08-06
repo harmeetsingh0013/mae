@@ -22,3 +22,6 @@ GET         /api/companies              com.mae.controllers.CompanyController.fi
 GET         /api/company/:id            com.mae.controllers.CompanyController.findCompany(id: Int)
 PUT         /api/company/:id            com.mae.controllers.CompanyController.updateCompany(id: Int)
 DELETE      /api/company/:id            com.mae.controllers.CompanyController.deleteCompany(id: Int)
+
+#orders routes
+GET         /api/invoice-generator      com.mae.controllers.OrderController.invoiceGenerator

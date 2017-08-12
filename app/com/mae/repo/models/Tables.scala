@@ -83,23 +83,27 @@ trait Tables {
    *  @param id Database column id SqlType(INT), AutoInc, PrimaryKey
    *  @param companyId Database column company_id SqlType(INT)
    *  @param invoiceNo Database column invoice_no SqlType(VARCHAR), Length(45,true)
+   *  @param mode Database column mode SqlType(ENUM), Length(4,false), Default(None)
+   *  @param dispatchThrough Database column dispatch_through SqlType(VARCHAR), Length(45,true), Default(None)
+   *  @param destination Database column destination SqlType(VARCHAR), Length(45,true), Default(None)
    *  @param addDate Database column add_date SqlType(TIMESTAMP)
-   *  @param updateDate Database column update_date SqlType(VARCHAR), Length(45,true), Default(None)
+   *  @param updateDate Database column update_date SqlType(TIMESTAMP), Default(None)
    *  @param status Database column status SqlType(ENUM), Length(7,false), Default(approve)
    *  @param discount Database column discount SqlType(DECIMAL), Default(None)
    *  @param sGst Database column s_gst SqlType(DECIMAL)
-   *  @param cGst Database column c_gst SqlType(DECIMAL) */
-  final case class OrdersRow(id: Int, companyId: Int, invoiceNo: String, addDate: java.sql.Timestamp, updateDate: Option[String] = None, status: String = "approve", discount: Option[scala.math.BigDecimal] = None, sGst: scala.math.BigDecimal, cGst: scala.math.BigDecimal)
+   *  @param cGst Database column c_gst SqlType(DECIMAL)
+   *  @param total Database column total SqlType(DECIMAL) */
+  final case class OrdersRow(id: Int, companyId: Int, invoiceNo: String, mode: Option[String] = None, dispatchThrough: Option[String] = None, destination: Option[String] = None, addDate: java.sql.Timestamp, updateDate: Option[java.sql.Timestamp] = None, status: String = "approve", discount: Option[scala.math.BigDecimal] = None, sGst: scala.math.BigDecimal, cGst: scala.math.BigDecimal, total: scala.math.BigDecimal)
   /** GetResult implicit for fetching OrdersRow objects using plain SQL queries */
-  implicit def GetResultOrdersRow(implicit e0: GR[Int], e1: GR[String], e2: GR[java.sql.Timestamp], e3: GR[Option[String]], e4: GR[Option[scala.math.BigDecimal]], e5: GR[scala.math.BigDecimal]): GR[OrdersRow] = GR{
+  implicit def GetResultOrdersRow(implicit e0: GR[Int], e1: GR[String], e2: GR[Option[String]], e3: GR[java.sql.Timestamp], e4: GR[Option[java.sql.Timestamp]], e5: GR[Option[scala.math.BigDecimal]], e6: GR[scala.math.BigDecimal]): GR[OrdersRow] = GR{
     prs => import prs._
-    OrdersRow.tupled((<<[Int], <<[Int], <<[String], <<[java.sql.Timestamp], <<?[String], <<[String], <<?[scala.math.BigDecimal], <<[scala.math.BigDecimal], <<[scala.math.BigDecimal]))
+    OrdersRow.tupled((<<[Int], <<[Int], <<[String], <<?[String], <<?[String], <<?[String], <<[java.sql.Timestamp], <<?[java.sql.Timestamp], <<[String], <<?[scala.math.BigDecimal], <<[scala.math.BigDecimal], <<[scala.math.BigDecimal], <<[scala.math.BigDecimal]))
   }
   /** Table description of table orders. Objects of this class serve as prototypes for rows in queries. */
   class Orders(_tableTag: Tag) extends profile.api.Table[OrdersRow](_tableTag, Some("mae_app"), "orders") {
-    def * = (id, companyId, invoiceNo, addDate, updateDate, status, discount, sGst, cGst) <> (OrdersRow.tupled, OrdersRow.unapply)
+    def * = (id, companyId, invoiceNo, mode, dispatchThrough, destination, addDate, updateDate, status, discount, sGst, cGst, total) <> (OrdersRow.tupled, OrdersRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(companyId), Rep.Some(invoiceNo), Rep.Some(addDate), updateDate, Rep.Some(status), discount, Rep.Some(sGst), Rep.Some(cGst)).shaped.<>({r=>import r._; _1.map(_=> OrdersRow.tupled((_1.get, _2.get, _3.get, _4.get, _5, _6.get, _7, _8.get, _9.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(companyId), Rep.Some(invoiceNo), mode, dispatchThrough, destination, Rep.Some(addDate), updateDate, Rep.Some(status), discount, Rep.Some(sGst), Rep.Some(cGst), Rep.Some(total)).shaped.<>({r=>import r._; _1.map(_=> OrdersRow.tupled((_1.get, _2.get, _3.get, _4, _5, _6, _7.get, _8, _9.get, _10, _11.get, _12.get, _13.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column id SqlType(INT), AutoInc, PrimaryKey */
     val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
@@ -107,10 +111,16 @@ trait Tables {
     val companyId: Rep[Int] = column[Int]("company_id")
     /** Database column invoice_no SqlType(VARCHAR), Length(45,true) */
     val invoiceNo: Rep[String] = column[String]("invoice_no", O.Length(45,varying=true))
+    /** Database column mode SqlType(ENUM), Length(4,false), Default(None) */
+    val mode: Rep[Option[String]] = column[Option[String]]("mode", O.Length(4,varying=false), O.Default(None))
+    /** Database column dispatch_through SqlType(VARCHAR), Length(45,true), Default(None) */
+    val dispatchThrough: Rep[Option[String]] = column[Option[String]]("dispatch_through", O.Length(45,varying=true), O.Default(None))
+    /** Database column destination SqlType(VARCHAR), Length(45,true), Default(None) */
+    val destination: Rep[Option[String]] = column[Option[String]]("destination", O.Length(45,varying=true), O.Default(None))
     /** Database column add_date SqlType(TIMESTAMP) */
     val addDate: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("add_date")
-    /** Database column update_date SqlType(VARCHAR), Length(45,true), Default(None) */
-    val updateDate: Rep[Option[String]] = column[Option[String]]("update_date", O.Length(45,varying=true), O.Default(None))
+    /** Database column update_date SqlType(TIMESTAMP), Default(None) */
+    val updateDate: Rep[Option[java.sql.Timestamp]] = column[Option[java.sql.Timestamp]]("update_date", O.Default(None))
     /** Database column status SqlType(ENUM), Length(7,false), Default(approve) */
     val status: Rep[String] = column[String]("status", O.Length(7,varying=false), O.Default("approve"))
     /** Database column discount SqlType(DECIMAL), Default(None) */
@@ -119,6 +129,8 @@ trait Tables {
     val sGst: Rep[scala.math.BigDecimal] = column[scala.math.BigDecimal]("s_gst")
     /** Database column c_gst SqlType(DECIMAL) */
     val cGst: Rep[scala.math.BigDecimal] = column[scala.math.BigDecimal]("c_gst")
+    /** Database column total SqlType(DECIMAL) */
+    val total: Rep[scala.math.BigDecimal] = column[scala.math.BigDecimal]("total")
 
     /** Foreign key referencing Companies (database name fk_orders_1) */
     lazy val companiesFk = foreignKey("fk_orders_1", companyId, Companies)(r => r.id, onUpdate=ForeignKeyAction.NoAction, onDelete=ForeignKeyAction.NoAction)

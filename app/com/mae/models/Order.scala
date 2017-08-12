@@ -9,19 +9,20 @@ case class Order (
                  id: Option[Int] = None,
                  companyId: Int,
                  invoiceNo: String,
-                 addDate: Option[Timestamp],
-                 updateDate: Option[Timestamp],
+                 addDate: Option[Timestamp] = None,
+                 updateDate: Option[Timestamp] = None,
                  discount: Option[Double] = None,
-                 status: Option[String],
+                 status: Option[String] = None,
                  sGst: Double,
                  cGst: Double,
-                 items: Vector[OrderItems]
+                 total: Double,
+                 products: Vector[OrderItems] = Vector.empty
                  )
 
 case class OrderItems(
                      id: Option[Int],
                      productId: Int,
-                     productName: String,
+                     productName: Option[String] = None,
                      quantity: Int,
                      price: Double,
                      )

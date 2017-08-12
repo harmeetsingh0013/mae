@@ -25,3 +25,5 @@ DELETE      /api/company/:id            com.mae.controllers.CompanyController.de
 
 #orders routes
 GET         /api/invoice-generator      com.mae.controllers.OrderController.invoiceGenerator
+POST        /api/order                  com.mae.controllers.OrderController.placeNewOrder
+GET         /api/order/:id/items        com.mae.controllers.OrderController.findOrderItems(id: Int)

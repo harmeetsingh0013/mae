@@ -1,6 +1,6 @@
 package com.mae.controllers
 
-import java.sql.Timestamp
+import java.sql.Date
 import javax.inject.Inject
 
 import com.mae.models.Order
@@ -49,10 +49,11 @@ class OrderController @Inject()(orderService: OrderService, cc: ControllerCompon
     }
   }
 
-  def findOrders(companyId: Option[Int], invoiceNo: Option[String], addDate: Option[Timestamp]
-                 , status: Option[String], page: Int) = {
+  def findOrders(companyId: Option[Int], invoiceNo: Option[String], date: Option[Long]
+                 , status: Option[String], page: Int) = Action.async {
     Logger.info("findOrders action performed")
 
+    val addDate = date.map(new Date(_))
     orderService.findOrders(companyId, invoiceNo, addDate, status, page).map { orders =>
       Ok(createJsonResponse(data = orders))
     }.recover {
@@ -69,6 +70,16 @@ class OrderController @Inject()(orderService: OrderService, cc: ControllerCompon
       case ex =>
         Logger.error("unable to find order items", ex)
         InternalServerError(createJsonResponse(status = false, msg = "unable to find order items", data = -1))
+    }
+  }
+
+  def cancelOrder(orderId: Int) = Action.async {
+    orderService.cancelOrder(orderId).map { value =>
+      Ok(createJsonResponse(data = value))
+    }.recover {
+      case ex =>
+        Logger.error("unable to cancel order", ex)
+        InternalServerError(createJsonResponse(status = false, msg = "unable to cancel order", data = -1))
     }
   }
 }

@@ -1,10 +1,9 @@
 package com.mae.repo.impl
 
-import java.sql.Timestamp
-import javax.inject.Inject
+import java.sql.Date
+import javax.inject.{Inject, Singleton}
 
-import com.mae.models.OrderItems
-import com.mae.repo.{OrderRepo, models}
+import com.mae.repo.OrderRepo
 import com.mae.repo.models.Tables
 import com.mae.repo.models.Tables.{Orders, OrdersItems, OrdersItemsRow, OrdersRow, Products}
 import org.slf4j.{Logger, LoggerFactory}
@@ -13,6 +12,7 @@ import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class OrderRepoImpl @Inject() (dbConfigProvider: DatabaseConfigProvider)
                               (implicit ec: ExecutionContext) extends OrderRepo{
 
@@ -47,7 +47,7 @@ class OrderRepoImpl @Inject() (dbConfigProvider: DatabaseConfigProvider)
     ).transactionally
   }
 
-  override def findOrders(companyId: Option[Int], invoiceNo: Option[String], addDate: Option[Timestamp]
+  override def findOrders(companyId: Option[Int], invoiceNo: Option[String], addDate: Option[Date]
                           , status: Option[String], limit: Int, offset: Int): Future[Seq[OrdersRow]] = db.run {
     logger.info("In findOrders repository method")
 
@@ -67,5 +67,15 @@ class OrderRepoImpl @Inject() (dbConfigProvider: DatabaseConfigProvider)
         (items, products) <- orderItems.filter(_.orderId === orderId) join products on (_.productId === _.id)
       } yield (items.id, products.id, products.name, items.qty, items.price)
     }.result
+  }
+
+  override def updateStatus(orderId: Int, status: String): Future[Int] = db.run {
+    logger.info("In findOrderItems repository method")
+
+    {
+      for {
+        ordr <- order.filter(_.id === orderId)
+      } yield (ordr.status)
+    }.update(status)
   }
 }

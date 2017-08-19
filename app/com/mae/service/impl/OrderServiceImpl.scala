@@ -1,6 +1,6 @@
 package com.mae.service.impl
 
-import java.sql.Timestamp
+import java.sql.Date
 import javax.inject.{Inject, Singleton}
 
 import com.mae.models.{Order, OrderItems}
@@ -33,7 +33,7 @@ class OrderServiceImpl @Inject() (orderRepo: OrderRepo)
     orderRepo.placeNewOrder(mapperOrderToOrdersRows(order), mapperOrderToOrdersItemsRow(order))
   }
 
-  override def findOrders(companyId: Option[Int], invoiceNo: Option[String], addDate: Option[Timestamp]
+  override def findOrders(companyId: Option[Int], invoiceNo: Option[String], addDate: Option[Date]
                           , status: Option[String], page: Int): Future[Vector[Order]] = {
     logger.info("In findOrders service method")
 
@@ -43,7 +43,7 @@ class OrderServiceImpl @Inject() (orderRepo: OrderRepo)
     }
   }
 
-  def findOrderItems(orderId: Int): Future[Vector[OrderItems]] = {
+  override def findOrderItems(orderId: Int): Future[Vector[OrderItems]] = {
     logger.info("In findOrderItems service method")
 
     orderRepo.findOrderItems(orderId).map { rows =>
@@ -58,6 +58,12 @@ class OrderServiceImpl @Inject() (orderRepo: OrderRepo)
           )
       }.toVector
     }
+  }
+
+  override def cancelOrder(orderId: Int): Future[Int] = {
+    logger.info("In cancelOrder service method")
+
+    orderRepo.updateStatus(orderId, "CANCEL")
   }
 
   private def mapperOrderToOrdersRows(order: Order) = {
@@ -96,4 +102,6 @@ class OrderServiceImpl @Inject() (orderRepo: OrderRepo)
         price = BigDecimal(item.price))
     }
   }
+
+
 }

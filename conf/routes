@@ -4,7 +4,6 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
@@ -26,4 +25,6 @@ DELETE      /api/company/:id            com.mae.controllers.CompanyController.de
 #orders routes
 GET         /api/invoice-generator      com.mae.controllers.OrderController.invoiceGenerator
 POST        /api/order                  com.mae.controllers.OrderController.placeNewOrder
+GET         /api/orders                 com.mae.controllers.OrderController.findOrders(companyId: Option[Int], invoiceNo: Option[String], date: Option[Long], status: Option[String], page: Int)
 GET         /api/order/:id/items        com.mae.controllers.OrderController.findOrderItems(id: Int)
+PUT         /api/order/:id/cancel       com.mae.controllers.OrderController.cancelOrder(id: Int)

@@ -21,8 +21,8 @@ trait Tables {
 
   /** Entity class storing rows of table Companies
    *  @param id Database column id SqlType(INT), AutoInc, PrimaryKey
-   *  @param addDate Database column add_date SqlType(TIMESTAMP)
-   *  @param updateDate Database column update_date SqlType(TIMESTAMP), Default(None)
+   *  @param addDate Database column add_date SqlType(DATE)
+   *  @param updateDate Database column update_date SqlType(DATE), Default(None)
    *  @param code Database column code SqlType(VARCHAR), Length(45,true)
    *  @param name Database column name SqlType(VARCHAR), Length(255,true)
    *  @param `type` Database column type SqlType(ENUM), Length(8,false)
@@ -32,11 +32,11 @@ trait Tables {
    *  @param city Database column city SqlType(VARCHAR), Length(45,true), Default(None)
    *  @param pincode Database column pincode SqlType(VARCHAR), Length(15,true)
    *  @param others Database column others SqlType(VARCHAR), Length(255,true), Default(None) */
-  final case class CompaniesRow(id: Int, addDate: java.sql.Timestamp, updateDate: Option[java.sql.Timestamp] = None, code: String, name: String, `type`: String, gstNo: String, address: String, state: Option[String] = None, city: Option[String] = None, pincode: String, others: Option[String] = None)
+  final case class CompaniesRow(id: Int, addDate: java.sql.Date, updateDate: Option[java.sql.Date] = None, code: String, name: String, `type`: String, gstNo: String, address: String, state: Option[String] = None, city: Option[String] = None, pincode: String, others: Option[String] = None)
   /** GetResult implicit for fetching CompaniesRow objects using plain SQL queries */
-  implicit def GetResultCompaniesRow(implicit e0: GR[Int], e1: GR[java.sql.Timestamp], e2: GR[Option[java.sql.Timestamp]], e3: GR[String], e4: GR[Option[String]]): GR[CompaniesRow] = GR{
+  implicit def GetResultCompaniesRow(implicit e0: GR[Int], e1: GR[java.sql.Date], e2: GR[Option[java.sql.Date]], e3: GR[String], e4: GR[Option[String]]): GR[CompaniesRow] = GR{
     prs => import prs._
-    CompaniesRow.tupled((<<[Int], <<[java.sql.Timestamp], <<?[java.sql.Timestamp], <<[String], <<[String], <<[String], <<[String], <<[String], <<?[String], <<?[String], <<[String], <<?[String]))
+    CompaniesRow.tupled((<<[Int], <<[java.sql.Date], <<?[java.sql.Date], <<[String], <<[String], <<[String], <<[String], <<[String], <<?[String], <<?[String], <<[String], <<?[String]))
   }
   /** Table description of table companies. Objects of this class serve as prototypes for rows in queries.
    *  NOTE: The following names collided with Scala keywords and were escaped: type */
@@ -47,10 +47,10 @@ trait Tables {
 
     /** Database column id SqlType(INT), AutoInc, PrimaryKey */
     val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
-    /** Database column add_date SqlType(TIMESTAMP) */
-    val addDate: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("add_date")
-    /** Database column update_date SqlType(TIMESTAMP), Default(None) */
-    val updateDate: Rep[Option[java.sql.Timestamp]] = column[Option[java.sql.Timestamp]]("update_date", O.Default(None))
+    /** Database column add_date SqlType(DATE) */
+    val addDate: Rep[java.sql.Date] = column[java.sql.Date]("add_date")
+    /** Database column update_date SqlType(DATE), Default(None) */
+    val updateDate: Rep[Option[java.sql.Date]] = column[Option[java.sql.Date]]("update_date", O.Default(None))
     /** Database column code SqlType(VARCHAR), Length(45,true) */
     val code: Rep[String] = column[String]("code", O.Length(45,varying=true))
     /** Database column name SqlType(VARCHAR), Length(255,true) */
@@ -86,18 +86,18 @@ trait Tables {
    *  @param mode Database column mode SqlType(ENUM), Length(4,false), Default(None)
    *  @param dispatchThrough Database column dispatch_through SqlType(VARCHAR), Length(45,true), Default(None)
    *  @param destination Database column destination SqlType(VARCHAR), Length(45,true), Default(None)
-   *  @param addDate Database column add_date SqlType(TIMESTAMP)
-   *  @param updateDate Database column update_date SqlType(TIMESTAMP), Default(None)
+   *  @param addDate Database column add_date SqlType(DATE)
+   *  @param updateDate Database column update_date SqlType(DATE), Default(None)
    *  @param status Database column status SqlType(ENUM), Length(7,false), Default(approve)
    *  @param discount Database column discount SqlType(DECIMAL), Default(None)
    *  @param sGst Database column s_gst SqlType(DECIMAL)
    *  @param cGst Database column c_gst SqlType(DECIMAL)
    *  @param total Database column total SqlType(DECIMAL) */
-  final case class OrdersRow(id: Int, companyId: Int, invoiceNo: String, mode: Option[String] = None, dispatchThrough: Option[String] = None, destination: Option[String] = None, addDate: java.sql.Timestamp, updateDate: Option[java.sql.Timestamp] = None, status: String = "approve", discount: Option[scala.math.BigDecimal] = None, sGst: scala.math.BigDecimal, cGst: scala.math.BigDecimal, total: scala.math.BigDecimal)
+  final case class OrdersRow(id: Int, companyId: Int, invoiceNo: String, mode: Option[String] = None, dispatchThrough: Option[String] = None, destination: Option[String] = None, addDate: java.sql.Date, updateDate: Option[java.sql.Date] = None, status: String = "approve", discount: Option[scala.math.BigDecimal] = None, sGst: scala.math.BigDecimal, cGst: scala.math.BigDecimal, total: scala.math.BigDecimal)
   /** GetResult implicit for fetching OrdersRow objects using plain SQL queries */
-  implicit def GetResultOrdersRow(implicit e0: GR[Int], e1: GR[String], e2: GR[Option[String]], e3: GR[java.sql.Timestamp], e4: GR[Option[java.sql.Timestamp]], e5: GR[Option[scala.math.BigDecimal]], e6: GR[scala.math.BigDecimal]): GR[OrdersRow] = GR{
+  implicit def GetResultOrdersRow(implicit e0: GR[Int], e1: GR[String], e2: GR[Option[String]], e3: GR[java.sql.Date], e4: GR[Option[java.sql.Date]], e5: GR[Option[scala.math.BigDecimal]], e6: GR[scala.math.BigDecimal]): GR[OrdersRow] = GR{
     prs => import prs._
-    OrdersRow.tupled((<<[Int], <<[Int], <<[String], <<?[String], <<?[String], <<?[String], <<[java.sql.Timestamp], <<?[java.sql.Timestamp], <<[String], <<?[scala.math.BigDecimal], <<[scala.math.BigDecimal], <<[scala.math.BigDecimal], <<[scala.math.BigDecimal]))
+    OrdersRow.tupled((<<[Int], <<[Int], <<[String], <<?[String], <<?[String], <<?[String], <<[java.sql.Date], <<?[java.sql.Date], <<[String], <<?[scala.math.BigDecimal], <<[scala.math.BigDecimal], <<[scala.math.BigDecimal], <<[scala.math.BigDecimal]))
   }
   /** Table description of table orders. Objects of this class serve as prototypes for rows in queries. */
   class Orders(_tableTag: Tag) extends profile.api.Table[OrdersRow](_tableTag, Some("mae_app"), "orders") {
@@ -117,10 +117,10 @@ trait Tables {
     val dispatchThrough: Rep[Option[String]] = column[Option[String]]("dispatch_through", O.Length(45,varying=true), O.Default(None))
     /** Database column destination SqlType(VARCHAR), Length(45,true), Default(None) */
     val destination: Rep[Option[String]] = column[Option[String]]("destination", O.Length(45,varying=true), O.Default(None))
-    /** Database column add_date SqlType(TIMESTAMP) */
-    val addDate: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("add_date")
-    /** Database column update_date SqlType(TIMESTAMP), Default(None) */
-    val updateDate: Rep[Option[java.sql.Timestamp]] = column[Option[java.sql.Timestamp]]("update_date", O.Default(None))
+    /** Database column add_date SqlType(DATE) */
+    val addDate: Rep[java.sql.Date] = column[java.sql.Date]("add_date")
+    /** Database column update_date SqlType(DATE), Default(None) */
+    val updateDate: Rep[Option[java.sql.Date]] = column[Option[java.sql.Date]]("update_date", O.Default(None))
     /** Database column status SqlType(ENUM), Length(7,false), Default(approve) */
     val status: Rep[String] = column[String]("status", O.Length(7,varying=false), O.Default("approve"))
     /** Database column discount SqlType(DECIMAL), Default(None) */
@@ -182,16 +182,16 @@ trait Tables {
    *  @param id Database column id SqlType(INT), AutoInc, PrimaryKey
    *  @param name Database column name SqlType(VARCHAR), Length(255,true)
    *  @param code Database column code SqlType(VARCHAR), Length(45,true)
-   *  @param addDate Database column add_date SqlType(TIMESTAMP)
-   *  @param updateDate Database column update_date SqlType(TIMESTAMP), Default(None)
+   *  @param addDate Database column add_date SqlType(DATE)
+   *  @param updateDate Database column update_date SqlType(DATE), Default(None)
    *  @param quantity Database column quantity SqlType(INT)
    *  @param price Database column price SqlType(DECIMAL)
    *  @param companyId Database column company_id SqlType(INT) */
-  final case class ProductsRow(id: Int, name: String, code: String, addDate: java.sql.Timestamp, updateDate: Option[java.sql.Timestamp] = None, quantity: Int, price: scala.math.BigDecimal, companyId: Int)
+  final case class ProductsRow(id: Int, name: String, code: String, addDate: java.sql.Date, updateDate: Option[java.sql.Date] = None, quantity: Int, price: scala.math.BigDecimal, companyId: Int)
   /** GetResult implicit for fetching ProductsRow objects using plain SQL queries */
-  implicit def GetResultProductsRow(implicit e0: GR[Int], e1: GR[String], e2: GR[java.sql.Timestamp], e3: GR[Option[java.sql.Timestamp]], e4: GR[scala.math.BigDecimal]): GR[ProductsRow] = GR{
+  implicit def GetResultProductsRow(implicit e0: GR[Int], e1: GR[String], e2: GR[java.sql.Date], e3: GR[Option[java.sql.Date]], e4: GR[scala.math.BigDecimal]): GR[ProductsRow] = GR{
     prs => import prs._
-    ProductsRow.tupled((<<[Int], <<[String], <<[String], <<[java.sql.Timestamp], <<?[java.sql.Timestamp], <<[Int], <<[scala.math.BigDecimal], <<[Int]))
+    ProductsRow.tupled((<<[Int], <<[String], <<[String], <<[java.sql.Date], <<?[java.sql.Date], <<[Int], <<[scala.math.BigDecimal], <<[Int]))
   }
   /** Table description of table products. Objects of this class serve as prototypes for rows in queries. */
   class Products(_tableTag: Tag) extends profile.api.Table[ProductsRow](_tableTag, Some("mae_app"), "products") {
@@ -205,10 +205,10 @@ trait Tables {
     val name: Rep[String] = column[String]("name", O.Length(255,varying=true))
     /** Database column code SqlType(VARCHAR), Length(45,true) */
     val code: Rep[String] = column[String]("code", O.Length(45,varying=true))
-    /** Database column add_date SqlType(TIMESTAMP) */
-    val addDate: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("add_date")
-    /** Database column update_date SqlType(TIMESTAMP), Default(None) */
-    val updateDate: Rep[Option[java.sql.Timestamp]] = column[Option[java.sql.Timestamp]]("update_date", O.Default(None))
+    /** Database column add_date SqlType(DATE) */
+    val addDate: Rep[java.sql.Date] = column[java.sql.Date]("add_date")
+    /** Database column update_date SqlType(DATE), Default(None) */
+    val updateDate: Rep[Option[java.sql.Date]] = column[Option[java.sql.Date]]("update_date", O.Default(None))
     /** Database column quantity SqlType(INT) */
     val quantity: Rep[Int] = column[Int]("quantity")
     /** Database column price SqlType(DECIMAL) */
@@ -232,16 +232,16 @@ trait Tables {
    *  @param companyId Database column company_id SqlType(INT)
    *  @param firstName Database column first_name SqlType(VARCHAR), Length(255,true)
    *  @param lastName Database column last_name SqlType(VARCHAR), Length(45,true), Default(None)
-   *  @param addDate Database column add_date SqlType(TIMESTAMP)
-   *  @param updateDate Database column update_date SqlType(TIMESTAMP), Default(None)
+   *  @param addDate Database column add_date SqlType(DATE)
+   *  @param updateDate Database column update_date SqlType(DATE), Default(None)
    *  @param `type` Database column type SqlType(ENUM), Length(8,false), Default(owner)
    *  @param mobile1 Database column mobile1 SqlType(VARCHAR), Length(15,true)
    *  @param mobile2 Database column mobile2 SqlType(VARCHAR), Length(15,true), Default(None) */
-  final case class UsersRow(id: Int, companyId: Int, firstName: String, lastName: Option[String] = None, addDate: java.sql.Timestamp, updateDate: Option[java.sql.Timestamp] = None, `type`: String = "owner", mobile1: String, mobile2: Option[String] = None)
+  final case class UsersRow(id: Int, companyId: Int, firstName: String, lastName: Option[String] = None, addDate: java.sql.Date, updateDate: Option[java.sql.Date] = None, `type`: String = "owner", mobile1: String, mobile2: Option[String] = None)
   /** GetResult implicit for fetching UsersRow objects using plain SQL queries */
-  implicit def GetResultUsersRow(implicit e0: GR[Int], e1: GR[String], e2: GR[Option[String]], e3: GR[java.sql.Timestamp], e4: GR[Option[java.sql.Timestamp]]): GR[UsersRow] = GR{
+  implicit def GetResultUsersRow(implicit e0: GR[Int], e1: GR[String], e2: GR[Option[String]], e3: GR[java.sql.Date], e4: GR[Option[java.sql.Date]]): GR[UsersRow] = GR{
     prs => import prs._
-    UsersRow.tupled((<<[Int], <<[Int], <<[String], <<?[String], <<[java.sql.Timestamp], <<?[java.sql.Timestamp], <<[String], <<[String], <<?[String]))
+    UsersRow.tupled((<<[Int], <<[Int], <<[String], <<?[String], <<[java.sql.Date], <<?[java.sql.Date], <<[String], <<[String], <<?[String]))
   }
   /** Table description of table users. Objects of this class serve as prototypes for rows in queries.
    *  NOTE: The following names collided with Scala keywords and were escaped: type */
@@ -258,10 +258,10 @@ trait Tables {
     val firstName: Rep[String] = column[String]("first_name", O.Length(255,varying=true))
     /** Database column last_name SqlType(VARCHAR), Length(45,true), Default(None) */
     val lastName: Rep[Option[String]] = column[Option[String]]("last_name", O.Length(45,varying=true), O.Default(None))
-    /** Database column add_date SqlType(TIMESTAMP) */
-    val addDate: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("add_date")
-    /** Database column update_date SqlType(TIMESTAMP), Default(None) */
-    val updateDate: Rep[Option[java.sql.Timestamp]] = column[Option[java.sql.Timestamp]]("update_date", O.Default(None))
+    /** Database column add_date SqlType(DATE) */
+    val addDate: Rep[java.sql.Date] = column[java.sql.Date]("add_date")
+    /** Database column update_date SqlType(DATE), Default(None) */
+    val updateDate: Rep[Option[java.sql.Date]] = column[Option[java.sql.Date]]("update_date", O.Default(None))
     /** Database column type SqlType(ENUM), Length(8,false), Default(owner)
      *  NOTE: The name was escaped because it collided with a Scala keyword. */
     val `type`: Rep[String] = column[String]("type", O.Length(8,varying=false), O.Default("owner"))

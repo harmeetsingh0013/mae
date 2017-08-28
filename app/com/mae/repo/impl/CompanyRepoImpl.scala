@@ -2,20 +2,18 @@ package com.mae.repo.impl
 
 import javax.inject.Inject
 
-import com.mae.repo.CompanyRepo
 import com.mae.repo.models.Tables
 import com.mae.repo.models.Tables.{Companies, CompaniesRow}
+import com.mae.repo.{CompanyRepo, DatabaseProvider}
 import org.slf4j.{Logger, LoggerFactory}
-import play.api.db.slick.DatabaseConfigProvider
-import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CompanyRepoImpl @Inject() (dbConfigProvider: DatabaseConfigProvider)
+class CompanyRepoImpl @Inject() (provider: DatabaseProvider)
                                 (implicit ec: ExecutionContext) extends CompanyRepo {
 
   val logger: Logger = LoggerFactory.getLogger(this.getClass())
-  private val dbConfig = dbConfigProvider.get[JdbcProfile]
+  private val dbConfig = provider.jdbcConfig
 
   import dbConfig._
   import profile.api._

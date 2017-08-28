@@ -11,8 +11,6 @@ lazy val slickVersion = "3.2.0"
 
 libraryDependencies ++= Seq(
   guice,
-  evolutions,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.0" % Test,
   "mysql" % "mysql-connector-java" % "6.0.6",
   "com.typesafe.play" %% "play-slick" % "3.0.0",
   "com.typesafe.play" %% "play-slick-evolutions" % "3.0.0",
